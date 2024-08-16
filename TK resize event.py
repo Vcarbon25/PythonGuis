@@ -9,6 +9,6 @@ def size_changed(a):
     height = root.winfo_height()
     Lheight.config(text="window height is: "+str(height))
     Lwidth.config(text="window width is: "+str(width))
-
+root.geometry("640x480")
 root.bind("<Configure>",size_changed)
 root.mainloop()
