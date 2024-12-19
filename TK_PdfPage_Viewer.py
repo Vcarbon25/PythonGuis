@@ -5,18 +5,41 @@ from PIL import Image, ImageTk
 from tkinter import messagebox
 import fitz
 
-root = TK.Tk()
-root.config(background="Blue")
-MainContainer = TK.LabelFrame(root)
-MainContainer.pack()
+root=TK.Tk()
 
-LbFile = TK.Label(MainContainer, text="fileName")
-LbFile.grid(row=0, column=0)
+root.title("Pdf Applicarion")
+root.geometry('750x600')
+#first to create the scroolable screen
+#create a main container in the root
+MainContainer = TK.Frame(root)
+MainContainer.pack(fill=TK.BOTH, expand=1)
 
-BOpenFile = TK.Button(MainContainer, text="Choose File")
+#create the canvas that will group the scroll bars and window
+Cvs = TK.Canvas(MainContainer,height=1200,width=800)
+Cvs.pack(side=TK.LEFT,fill=TK.BOTH, expand=1)
+#put the scrollbar
+YScroll = TK.Scrollbar(MainContainer,orient=TK.VERTICAL,command=Cvs.yview,width=15)
+YScroll.pack(side=TK.RIGHT,fill=TK.Y)
+XScroll = TK.Scrollbar(root,orient=TK.HORIZONTAL,command=Cvs.xview)
+XScroll.pack(side=TK.BOTTOM,fill=TK.X)
+
+#configure canvas
+Cvs.configure(yscrollcommand=YScroll.set)
+Cvs.configure(xscrollcommand=XScroll.set)
+Cvs.bind('<Configure>', lambda e: Cvs.configure(scrollregion=Cvs.bbox('all')))
+
+InnerFrame = TK.Frame(Cvs)
+
+Cvs.create_window((0,0),window=InnerFrame,anchor='nw')
+#From this point all the widgets ,ust be inserted in the Inner Frame
+
+LbFile = TK.Label(InnerFrame, text="fileName")
+LbFile.grid(row=0, column=0,columnspan=3)
+
+BOpenFile = TK.Button(InnerFrame, text="Choose File")
 BOpenFile.grid(row=1, column=0)
 
-ContLstPages = TK.LabelFrame(MainContainer, text="Paginas", border=3)
+ContLstPages = TK.LabelFrame(InnerFrame, text="Paginas", border=3)
 ContLstPages.grid(row=2, column=0)
 
 ScrollLB = TK.Scrollbar(ContLstPages)
@@ -28,33 +51,15 @@ LBPages = TK.Listbox(
 )
 ScrollLB.config(command=LBPages.yview)
 
-ContWorking = TK.LabelFrame(MainContainer, text="Operation Mode", border=3, background="blue")
+ContWorking = TK.LabelFrame(InnerFrame, text="Operation Mode", border=3, background="blue")
 ContWorking.grid(row=3, column=1)
 
 LBPages.pack()
 
-ContPag = TK.LabelFrame(MainContainer, text="Conteudo", background="white")
-ContPag.grid(row=2, column=1)
-
-# Create a frame to hold the canvas and scrollbars
-canvas_frame = TK.Frame(ContPag)
-canvas_frame.pack(fill=TK.BOTH, expand=True)
 
 # Canvas with scroll region
-Page = TK.Canvas(canvas_frame, height=400, width=400, 
-                 scrollregion=(0, 0, 1000, 1000))
-Page.pack(side=TK.LEFT, fill=TK.BOTH, expand=True)
-
-# Vertical Scrollbar
-YScroll = TK.Scrollbar(canvas_frame, orient=TK.VERTICAL, command=Page.yview)
-YScroll.pack(side=TK.RIGHT, fill=TK.Y)
-
-# Horizontal Scrollbar
-XScroll = TK.Scrollbar(canvas_frame, orient=TK.HORIZONTAL, command=Page.xview)
-XScroll.pack(side=TK.BOTTOM, fill=TK.X)
-
-# Configure canvas scrolling
-Page.config(yscrollcommand=YScroll.set, xscrollcommand=XScroll.set)
+Page = TK.Canvas(InnerFrame,height=1200,width=800)
+Page.grid(row=2, column=2,rowspan=4)
 
 FileN = ""
 
@@ -106,5 +111,4 @@ def LBSelChange(a):
     RenderPage(IndexSelected - 1)  # Adjust index to 0-based
 
 LBPages.bind("<<ListboxSelect>>", LBSelChange)
-
 root.mainloop()
