@@ -1,8 +1,17 @@
+"""
+prerequisites
+pip install pandas
+pip install openpyxl
+"""
 import tkinter as TK
 from tkinter import filedialog
 import pandas as pd
 import random
 
+"""
+Excel file template
+Question   |   Correct_Answer  |   Wrong_Answer1  |   Wrong_Answer2  |  Wrong_Answer3
+"""
 class App:
     def __init__(self, master=None):
         master.title("Flashcards")
