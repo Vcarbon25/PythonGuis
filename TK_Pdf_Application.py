@@ -8,14 +8,16 @@ import fitz
 
 root = TK.Tk()
 root.config(background="Blue")
+menubar = TK.Menu(root) #This will be the main hub for the top menu
+FilesMenu = TK.Menu(menubar,tearoff=0)
+menubar.add_cascade(label="File",menu=FilesMenu)
 MainContainer = TK.LabelFrame(root)
 MainContainer.pack()
 global Document
 LbFile = TK.Label(MainContainer, text="fileName")
 LbFile.grid(row=0, column=0,columnspan=2)
 
-BOpenFile = TK.Button(MainContainer, text="Choose File")
-BOpenFile.grid(row=1, column=0)
+
 
 ContLstPages = TK.LabelFrame(MainContainer, text="Paginas", border=3)
 ContLstPages.grid(row=2, column=0)
@@ -35,7 +37,7 @@ ContWorking.grid(row=3, column=1)
 
 LBPages.pack()
 Opc = TK.StringVar()
-Opc.set("null")
+Opc.set("Img")
 RBPageImag = TK.Radiobutton(MainContainer,text="Render Page",variable=Opc,value="Img")
 RBPageText = TK.Radiobutton(MainContainer,text="Page Text",variable=Opc,value="Txt")
 RBPageImag.grid(row=3,column=0)
@@ -51,7 +53,7 @@ canvas_frame.pack(fill=TK.BOTH, expand=True)
 PageImg = TK.Canvas(canvas_frame, height=400, width=400, 
                  scrollregion=(0, 0, 1000, 1000))
 PageText = TK.Text(canvas_frame, height=30,width=60)
-PageImg.pack(side=TK.LEFT, fill=TK.BOTH, expand=True)
+
 
 # Vertical Scrollbar
 YScroll = TK.Scrollbar(canvas_frame, orient=TK.VERTICAL, command=PageImg.yview)
@@ -61,6 +63,7 @@ YScroll.pack(side=TK.RIGHT, fill=TK.Y)
 XScroll = TK.Scrollbar(canvas_frame, orient=TK.HORIZONTAL, command=PageImg.xview)
 XScroll.pack(side=TK.BOTTOM, fill=TK.X)
 
+PageImg.pack(side=TK.LEFT, fill=TK.BOTH, expand=True)
 # Configure canvas scrolling
 PageImg.config(yscrollcommand=YScroll.set, xscrollcommand=XScroll.set)
 
@@ -85,7 +88,7 @@ def Open_File():
     if FileExt == "pdf":
         PdfParser(FileN)
 
-BOpenFile.config(command=Open_File)
+FilesMenu.add_command(label="Open File",command=Open_File)
 
 def Operation_Change():
     Option = Opc.get()
@@ -136,5 +139,5 @@ def LBSelChange(a):
     ShowText(IndexSelected)
 
 LBPages.bind("<<ListboxSelect>>", LBSelChange)
-
+root.config(menu=menubar)
 root.mainloop()
