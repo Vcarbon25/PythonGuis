@@ -11,6 +11,8 @@ root.config(background="Blue")
 menubar = TK.Menu(root) #This will be the main hub for the top menu
 FilesMenu = TK.Menu(menubar,tearoff=0)
 menubar.add_cascade(label="File",menu=FilesMenu)
+MiscOperations = TK.Menu(menubar,tearoff=1)
+menubar.add_cascade(label="Edit",menu=MiscOperations)
 MainContainer = TK.LabelFrame(root)
 MainContainer.pack()
 global Document
@@ -72,12 +74,14 @@ FileN = ""
 def PdfParser(FileN):
     LBPages.delete(0, TK.END)
     global LstPages
-    leitor = pdf.PdfReader(FileN)
-    LstPages = list(range(1, len(leitor.pages) + 1))
-    print(LstPages)
-    LBPages.insert(0, *LstPages)
     global Document
     Document = fitz.open(FileN)
+    LstPages = list(range(len(Document)))
+    print(LstPages)
+    
+    LBPages.insert(0, *LstPages)
+    
+    
 
 def Open_File():
     global FileN
@@ -137,7 +141,29 @@ def LBSelChange(a):
     IndexSelected = int(LBPages.curselection()[0])
     RenderPage(IndexSelected)  # Adjust index to 0-based
     ShowText(IndexSelected)
+    print(str(root.winfo_width())+" "+str(root.winfo_height()))
 
 LBPages.bind("<<ListboxSelect>>", LBSelChange)
+
+def CutPdf():
+
+    try:
+        Page2Cut = int(LBPages.curselection()[0])
+        LastPage=len(Document)
+        name1=filedialog.asksaveasfilename(initialdir="Documents",title="Nome 1 pdf")
+        Newdoc1=fitz.open()
+        Newdoc1.insert_pdf(Document,from_page=0,to_page=Page2Cut)
+        Newdoc1.save(name1)
+        name2=filedialog.asksaveasfilename(initialdir="Documents",title="Nome 2 PDF")
+        NewDoc2=fitz.open()
+        NewDoc2.insert_pdf(Document,from_page=Page2Cut+1,to_page=LastPage)
+        NewDoc2.save(name2)
+    except:
+        messagebox.showinfo("Operation error","It was not possible to complete the cut operation" )
+MiscOperations.add_command(label="Cut pdf",command=CutPdf) 
+
+
+
+
 root.config(menu=menubar)
 root.mainloop()
