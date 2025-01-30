@@ -14,7 +14,7 @@ menubar.add_cascade(label="File",menu=FilesMenu)
 MiscOperations = TK.Menu(menubar,tearoff=1)
 menubar.add_cascade(label="Edit",menu=MiscOperations)
 MainContainer = TK.LabelFrame(root)
-MainContainer.pack()
+MainContainer.pack(fill="both")
 global Document
 LbFile = TK.Label(MainContainer, text="fileName")
 LbFile.grid(row=0, column=0,columnspan=2)
@@ -52,7 +52,7 @@ canvas_frame = TK.Frame(ContPag)
 canvas_frame.pack(fill=TK.BOTH, expand=True)
 
 # Canvas with scroll region
-PageImg = TK.Canvas(canvas_frame, height=400, width=400, 
+PageImg = TK.Canvas(canvas_frame, height=550,width=600,
                  scrollregion=(0, 0, 1000, 1000))
 PageText = TK.Text(canvas_frame, height=30,width=60)
 
@@ -146,24 +146,17 @@ def LBSelChange(a):
 LBPages.bind("<<ListboxSelect>>", LBSelChange)
 
 def CutPdf():
-
-    try:
-        Page2Cut = int(LBPages.curselection()[0])
-        LastPage=len(Document)
-        name1=filedialog.asksaveasfilename(initialdir="Documents",title="Nome 1 pdf")
-        Newdoc1=fitz.open()
-        Newdoc1.insert_pdf(Document,from_page=0,to_page=Page2Cut)
-        Newdoc1.save(name1)
-        name2=filedialog.asksaveasfilename(initialdir="Documents",title="Nome 2 PDF")
-        NewDoc2=fitz.open()
-        NewDoc2.insert_pdf(Document,from_page=Page2Cut+1,to_page=LastPage)
-        NewDoc2.save(name2)
-    except:
-        messagebox.showinfo("Operation error","It was not possible to complete the cut operation" )
+    Page2Cut = int(LBPages.curselection()[0])
+    LastPage=len(Document)
+    name1=filedialog.asksaveasfilename(initialdir="Documents",title="Nome 1 pdf")
+    Newdoc1=fitz.open()
+    Newdoc1.insert_pdf(Document,from_page=0,to_page=Page2Cut)
+    Newdoc1.save(name1)
+    name2=filedialog.asksaveasfilename(initialdir="Documents",title="Nome 2 PDF")
+    NewDoc2=fitz.open()
+    NewDoc2.insert_pdf(Document,from_page=Page2Cut+1,to_page=LastPage)
+    NewDoc2.save(name2)
 MiscOperations.add_command(label="Cut pdf",command=CutPdf) 
-
-
-
 
 root.config(menu=menubar)
 root.mainloop()
