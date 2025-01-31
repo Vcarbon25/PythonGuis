@@ -38,14 +38,16 @@ ContWorking.grid(row=3, column=1)
 
 
 LBPages.pack()
+InZoom = TK.Entry(MainContainer,width=8)
+InZoom.grid(row=3,column=0)
 Opc = TK.StringVar()
 Opc.set("Img")
 RBPageImag = TK.Radiobutton(MainContainer,text="Render Page",variable=Opc,value="Img")
 RBPageText = TK.Radiobutton(MainContainer,text="Page Text",variable=Opc,value="Txt")
-RBPageImag.grid(row=3,column=0)
-RBPageText.grid(row=4,column=0)
+RBPageImag.grid(row=4,column=0)
+RBPageText.grid(row=5,column=0)
 ContPag = TK.LabelFrame(MainContainer, text="Conteudo", background="white")
-ContPag.grid(row=2, column=1,rowspan=3)
+ContPag.grid(row=2, column=1,rowspan=5)
 
 # Create a frame to hold the canvas and scrollbars
 canvas_frame = TK.Frame(ContPag)
@@ -118,8 +120,10 @@ def RenderPage(num):
     PageImg.delete("all")
     
     # render page
-    
-    zoom = 1
+    try:
+        zoom = float(InZoom.get())
+    except:
+        messagebox.showinfo("Erro no zoom","Informe um numero com . de saparador decimal")
     mat = fitz.Matrix(zoom, zoom)
     pag = Document.load_page(num)
     PixMat = pag.get_pixmap(matrix=mat)
