@@ -1,7 +1,11 @@
-
+"""
+requirements
+    pip install fitz
+    pip install Pillow
+    
+"""
 import tkinter as TK
 from tkinter import filedialog
-import PyPDF2 as pdf
 from PIL import Image, ImageTk
 from tkinter import messagebox
 import fitz
