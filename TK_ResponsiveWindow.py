@@ -6,6 +6,8 @@ root.pack()
 
 BtAdd = TK.Button(root,text="Add row:")
 BtAdd.grid(row=0,column=0)
+BtDel= TK.Button(root,text="Delete row")
+BtDel.grid(row=1,column=0)
 CvContainer = TK.Canvas(root,height=300,width=250)
 CvContainer.grid(row=0,column=1)
 YScroll = TK.Scrollbar(CvContainer,orient='vertical')
@@ -19,6 +21,9 @@ def AddRow():
     EnInfo = TK.Entry(LFAtr)
     EnInfo.grid(row=0,column=0)
     
-
+def Del_Row():
+    Elements = CvContainer.winfo_children()
+    Elements[-1].pack_forget()
 BtAdd.config(command=AddRow)
+BtDel.config(command=Del_Row)
 root.mainloop()
