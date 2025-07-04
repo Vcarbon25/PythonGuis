@@ -174,5 +174,43 @@ def MergePdfs():
     Document.save(ArquivoNovo)
 
 MiscOperations.add_command(label="merge pdfs",command=MergePdfs)
+
+def Export_Menu():
+    
+    ExpMenu = TK.Toplevel(root)
+    LbIn=TK.Label(ExpMenu, text="Initial page")
+    LbIn.grid(row=0,column=0)
+    StrPgIn=TK.Entry(ExpMenu,width=4)
+    StrPgIn.grid(row=0,column=1)
+    LbEnd = TK.Label(ExpMenu,text="Last Page")
+    LbEnd.grid(row=1,column=0)
+    EndPgIn=TK.Entry(ExpMenu,width=4)
+    EndPgIn.grid(row=1,column=1)
+    #seting the combobox
+    OutFormat=["text", "blocks", "words", "html","xhtml", "json", "xml"]
+    Escolha=TK.StringVar()
+    Escolha.set("text")
+    OutForatIn=TK.OptionMenu(ExpMenu,Escolha,*OutFormat)
+    OutForatIn.grid(row=3,column=0)
+
+    def Export():
+        try:
+            StartPage=int(StrPgIn.get())
+            EndPage = int(EndPgIn.get())
+            OutData=''
+            for i in range(StartPage,EndPage+1):
+                OutData+= Document[i].get_text(str(Escolha.get()))
+            
+            filepath=filedialog.asksaveasfilename(initialdir="Desktop")
+            OutFile = open(filepath,"w",encoding='utf8')
+            OutFile.write(OutData)
+            OutFile.close()
+        except:
+            messagebox.showerror("Input Error","Page Numbers must be Integers")
+    
+    BtExport=TK.Button(ExpMenu,text="Export data",command=Export)
+    BtExport.grid(row=3,column=2)
+MiscOperations.add_command(label="Extraction",command=Export_Menu)
+
 root.config(menu=menubar)
 root.mainloop()
