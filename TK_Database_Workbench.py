@@ -1,4 +1,5 @@
 import tkinter as TK
+from tkinter import messagebox
 import tkinter.filedialog as FD
 import sqlite3
 
@@ -33,6 +34,7 @@ class App():
         self.TxIn.delete(0,TK.END)
         if self.File=='':
             self.TxInteractions.insert(TK.END,"Select File\n\n")
+
         if UserIn.strip()!='':
             self.TxInteractions.insert(TK.END, UserIn+"\n")
             self.TxIn.delete(0,TK.END)
@@ -43,7 +45,7 @@ class App():
 
                     self.TxInteractions.insert(TK.END,str(row)+"\n")
             except:
-                pass
+                self.TxInteractions.insert(TK.END, "wasn't possible to execute above command")
         if text!="":
             self.TxInteractions.insert(TK.END, str(text)+"\n")
             
@@ -88,7 +90,9 @@ class App():
         self.LbHelp6.grid(row=5,column=0)
 
         self.LBHelp6 = TK.Label(self.HelpWindow,text=""">>SELECT DATA FROM TABLE\nSELECT * (for all colunms\n or ) colunm names\n FROM tablename\n WHERE colum condition""")
-        self.LBHelp6.grid(row=5,column=0)
+        self.LBHelp6.grid(row=6,column=0)
+        self.LbHelp7 = TK.Label(self.HelpWindow,text="""SQLite has a inert funcionality where there's an extra colunm in tables, oid,\n that contain an unique index for each colunm this index is\n great to use in select and update statements to avoid erros in data manipulation""")
+        self.LbHelp7.grid(row=7,column=0)
 root=TK.Tk()
 App(root)
 root.mainloop()
