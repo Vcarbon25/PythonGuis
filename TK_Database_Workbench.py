@@ -5,26 +5,30 @@ import sqlite3
 
 class App():
     def __init__(self,master=None):
+
         master.title("SQL Workbench")
-        self.LFControls = TK.LabelFrame(master,text="Controls")
-        self.LFControls.grid(column=0,row=0,rowspan=5)
-        self.LbFile=TK.Label(self.LFControls,text="Select File")
-        self.LbFile.grid(row=0,column=0)
-        self.BtNewFile = TK.Button(self.LFControls,text="New Database",command=self.New_DB)
-        self.BtNewFile.grid(row=1,column=0)
-        self.BtFile = TK.Button(self.LFControls,text="Choose File",command=self.Open_File)
-        self.BtFile.grid(row=2,column=0)
+        self.top = master.winfo_toplevel()
+        self.TopMenu = TK.Menu(self.top)
+        self.top['menu'] = self.TopMenu
         
-        self.BtSave = TK.Button(self.LFControls,text="Save Changes",command=self.Save)
-        self.BtSave.grid(row=3,column=0)
-        self.BtHelp = TK.Button(self.LFControls,text="SQL help",command=self.SQLHelp)
-        self.BtHelp.grid(row=4,column=0)
+        self.Dr1 = TK.Menu(self.TopMenu,tearoff=1)
+        self.TopMenu.add_cascade(label='File',menu=self.Dr1)
+        self.Dr1.add_command(label='Create DB',command=self.New_DB)
+        self.Dr1.add_command(label="Open DB",command=self.Open_File)
+        self.Dr2 = TK.Menu(self.TopMenu,tearoff=1)
+        self.TopMenu.add_cascade(label="Operations",menu=self.Dr2)
+        self.Dr2.add_command(label="Commit Changes",command=self.Save)
+        self.Dr2.add_command(label="SQL help", command=self.SQLHelp)
+        
+        self.LbFile=TK.Label(master,text="Select File")
+        self.LbFile.grid(row=0,column=0)
+         
         self.TxInteractions = TK.Text(master,border=2)
-        self.TxInteractions.grid(row=1,column=1,columnspan=3)
+        self.TxInteractions.grid(row=1,column=0,columnspan=3)
         self.LbIn = TK.Label(master,text="Input: ")
-        self.LbIn.grid(row=2,column=1)
+        self.LbIn.grid(row=2,column=0)
         self.TxIn = TK.Entry(master,width=60)
-        self.TxIn.grid(row=2,column=2)
+        self.TxIn.grid(row=2,column=1)
         self.File=''
         self.BtOk=TK.Button(master,text="Send Command",command=self.Update_Interaction)
         self.BtOk.grid(row=2,column=0)
