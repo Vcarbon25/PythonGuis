@@ -1,7 +1,8 @@
 """
 requirements
-    pip install fitz
-    pip install Pillow
+    pip install pymupdf
+    pip install 
+    pip install pyttsx3
     
 """
 import tkinter as TK
@@ -9,6 +10,8 @@ from tkinter import filedialog
 from PIL import Image, ImageTk
 from tkinter import messagebox
 import fitz
+import pyttsx3
+import threading
 
 root = TK.Tk()
 root.config(background="Blue")
@@ -50,8 +53,10 @@ RBPageImag = TK.Radiobutton(MainContainer,text="Render Page",variable=Opc,value=
 RBPageText = TK.Radiobutton(MainContainer,text="Page Text",variable=Opc,value="Txt")
 RBPageImag.grid(row=4,column=0)
 RBPageText.grid(row=5,column=0)
+BtRead=TK.Button(MainContainer,text="Read Aloud")
+BtRead.grid(row=6,column=0)
 ContPag = TK.LabelFrame(MainContainer, text="Conteudo", background="white")
-ContPag.grid(row=2, column=1,rowspan=5)
+ContPag.grid(row=2, column=1,rowspan=6)
 
 # Create a frame to hold the canvas and scrollbars
 canvas_frame = TK.Frame(ContPag)
@@ -95,7 +100,7 @@ def Open_File():
     Name = FileN.split("/")
     LbFile.config(text=str(Name[-1]))
     FileExt = Name[-1].split(".")[-1]
-    if FileExt == "pdf":
+    if FileExt in ("pdf","epub"):
         PdfParser(FileN)
 
 FilesMenu.add_command(label="Open File",command=Open_File)
@@ -153,6 +158,16 @@ def LBSelChange(a):
 
 LBPages.bind("<<ListboxSelect>>", LBSelChange)
 
+def Read():
+    try:
+        reader=pyttsx3.init()
+        text = PageText.get('1.0','end')
+        reader.say(text)
+        threading.Thread(target= reader.runAndWait()).start()
+        reader.stop()
+    except:
+        messagebox.showerror("Text Error","It's not possible to read the target page")
+BtRead.config(command=Read)
 def CutPdf():
     Page2Cut = int(LBPages.curselection()[0])
     LastPage=len(Document)
