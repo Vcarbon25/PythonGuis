@@ -22,9 +22,15 @@ class App():
         
         self.LbFile=TK.Label(master,text="Select File")
         self.LbFile.grid(row=0,column=0)
-         
-        self.TxInteractions = TK.Text(master,border=2)
-        self.TxInteractions.grid(row=1,column=0,columnspan=3)
+        self.FrTextNScroll = TK.Frame(master)
+        self.FrTextNScroll.grid(row=1,column=0,columnspan=3) #in this segment make possible to control y position in text widget with scrollbar
+        self.ScrText=TK.Scrollbar(self.FrTextNScroll)
+        self.ScrText.pack(side=TK.RIGHT,fill=TK.Y)
+        self.TxInteractions = TK.Text(self.FrTextNScroll,border=2,yscrollcommand=self.ScrText.set)
+        self.TxInteractions.pack()
+        self.ScrText.config(command=self.TxInteractions.yview)
+
+        #returning to main screen to insert the data
         self.LbIn = TK.Label(master,text="Input: ")
         self.LbIn.grid(row=2,column=0)
         self.TxIn = TK.Entry(master,width=60)
@@ -74,6 +80,7 @@ class App():
     def Save(self):
         self.Db.commit()
         self.Update_Interaction("Commit")
+    
     def SQLHelp(self):
         self.HelpWindow=TK.Toplevel()
         self.HelpWindow.title("SQL tips")
